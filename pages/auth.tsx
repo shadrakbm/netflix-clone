@@ -1,6 +1,10 @@
 import Input from "@/components/Input"
 
+import axios from "axios"
+
 import { useState, useCallback } from "react"
+
+import { signIn } from "next-auth/react"
 
 const Auth = () => {
     const [email, setEmail] = useState("")
@@ -12,6 +16,31 @@ const Auth = () => {
     const toggleVariant = useCallback(() => {
         setVariant((currentVariant) => currentVariant === "login" ? "register" : "login")
     }, [])
+
+    const register = useCallback(async () => {
+        try {
+            await axios.post("/api/register", {
+                email,
+                username,
+                password
+            }) 
+        } catch (error) {
+            console.log(error)
+        }
+    }, [email, username, password])
+
+    const login = useCallback(async () => {
+        try  {
+            await signIn("credentials", {
+                email,
+                password,
+                redirect: false,
+                callbackUrl: "/"
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }, [email, password])
 
     return (
         <div className="h-full w-full bg-[url('/images/netflix-collection.jpg')] bg-center bg-cover">
@@ -48,8 +77,8 @@ const Auth = () => {
                                 label="Mot de passe"
                             />
                         </div>
-                        <button className="bg-red-700 py-3 text-white rounded-md w-full mt-10 hover:bg-red-800">
-                            {variant === "login" ? "se connecter" : "s'enregistrer"}
+                        <button onClick={variant === "login" ? login : register} className="bg-red-700 py-3 text-white rounded-md w-full mt-10 hover:bg-red-800">
+                            {variant === "login" ? "Se connecter" : "S'enregistrer"}
                         </button>
                         <p className="text-neutral-500 mt-12">
                             {variant === "login" ? "C'est la première fois que vous utilisez Netflix?" : "Vous avez déjà un compte?"}

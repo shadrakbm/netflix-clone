@@ -9,7 +9,7 @@ export default NextAuth({
     providers: [
         Credentials({
             id: "credentials",
-            name: "credentials",
+            name: "Credentials",
             credentials: {
                 email: {
                     label: "Adresse mail",
@@ -46,7 +46,7 @@ export default NextAuth({
     pages: {
         signIn: "/auth"
     },
-    debug: process.env.NODE_ENV === "development",
+    debug: process.env.NODE_ENV !== "production",
     session: {
         strategy: "jwt"
     },
